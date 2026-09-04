@@ -1,0 +1,7 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+
+# local design exploration + exported chat transcripts -- never meant for the public repo
+design-variants/
