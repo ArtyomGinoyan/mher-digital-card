@@ -394,37 +394,27 @@ footer         { animation: fadeUp    .5s ease-out .34s both; }
   .bento .tile, footer { animation: none; opacity: 1; }
 }
 
-/* ---- intro splash (root page only -- hy/en/de/ru have no splash at all) ----
+/* ---- intro splash (every language page has its own) ----
    In normal document flow (not a fixed overlay) so a real scroll gesture
-   genuinely reveals the main content underneath -- no CSS trick needed for
-   that part, it's just how scrolling works. Clicking it skips it instantly
-   via the :has(#skip-intro:checked) selector below -- still zero JS.
-
-   Deliberately NOT auto-collapsed by a timer: shrinking this element's
-   height while the visitor might be mid-scroll makes the browser clamp
-   their scroll position to the new (much shorter) document, which can
-   jump them straight to the bottom of the page. A click is a discrete,
-   one-off action with nothing else competing for scroll position at that
-   instant, so it's safe to collapse the layout there -- a timer firing
-   during an in-progress scroll gesture is not. The splash simply holds
-   until scrolled or clicked past. */
-.skip-intro-input {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-}
+   genuinely reveals the main content underneath -- no CSS trick needed,
+   it's just how scrolling works. It's a plain <a href="#card"> wrapping
+   the whole thing: a click jumps straight to the card via native anchor
+   navigation -- no layout collapse, so nothing stops you from scrolling
+   back up to see it again afterwards, same as if you'd just scrolled past
+   it yourself. (An earlier version collapsed the element's height on a
+   timer; if that collapse fires while a scroll gesture is mid-flight, the
+   browser clamps the stale scroll position to the new, shorter document,
+   which can jump straight to the page bottom. Not animating height at all
+   sidesteps that class of bug entirely.) */
 .intro-section {
   display: flex; align-items: center; justify-content: center;
   flex: none; align-self: stretch;
   width: 100%; height: 100vh; overflow: hidden;
-  cursor: pointer;
+  cursor: pointer; text-decoration: none; color: inherit;
   background: var(--bg);
   background-image:
     radial-gradient(ellipse 900px 600px at 8% -8%, var(--glow-1), transparent 60%),
     radial-gradient(ellipse 800px 700px at 100% 30%, var(--glow-2), transparent 60%);
-}
-body:has(#skip-intro:checked) .intro-section {
-  height: 0; opacity: 0;
-  transition: height .4s ease, opacity .3s ease;
 }
 .intro-content { display: flex; flex-direction: column; align-items: center; gap: .7rem; text-align: center; padding: 0 1.5rem; }
 .intro-eyebrow {
