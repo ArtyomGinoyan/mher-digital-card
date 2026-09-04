@@ -133,6 +133,17 @@ main { width: 100%; max-width: 760px; padding: 2.2rem 1.5rem 3rem; display: flex
 .langbar a:hover, .variantbar a:hover { color: var(--accent-deep); }
 .langbar .current, .variantbar .current { color: var(--ink); font-weight: 600; }
 
+/* language switcher reachable straight from the splash, without dismissing
+   it first -- fixed like the theme switch, opposite corner */
+.intro-langbar {
+  position: fixed; top: 1rem; left: 1rem; z-index: 1000;
+  display: flex; gap: .7rem;
+  font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+}
+.intro-langbar a { color: var(--muted); text-decoration: none; }
+.intro-langbar a:hover, .intro-langbar a:focus-visible { color: var(--accent-deep); }
+.intro-langbar .current { color: var(--ink); font-weight: 600; }
+
 /* ---- theme switch (pure CSS, no JS) ---- */
 .theme-switch {
   position: fixed; top: 1rem; right: 1rem; z-index: 1000; cursor: pointer;
