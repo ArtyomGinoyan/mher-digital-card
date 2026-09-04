@@ -387,18 +387,50 @@ footer         { animation: fadeUp    .8s ease-out 4.18s both; }
   .bento .tile, footer { animation: none; opacity: 1; }
 }
 
-/* ---- intro splash ---- */
-.intro-overlay {
-  position: fixed; inset: 0; z-index: 999;
+/* skip the wait -- clicking the intro fast-forwards the tile entrance too.
+   Pages that never had a splash to begin with (.no-intro) use these same
+   fast delays as their normal, default timing. */
+body:has(#skip-intro:checked) .tile-hero,     .no-intro .tile-hero     { animation-delay: .02s; }
+body:has(#skip-intro:checked) .tile-contact,  .no-intro .tile-contact  { animation-delay: .06s; }
+body:has(#skip-intro:checked) .tile-cta,      .no-intro .tile-cta      { animation-delay: .10s; }
+body:has(#skip-intro:checked) .tile-vital.v2, .no-intro .tile-vital.v2 { animation-delay: .08s; }
+body:has(#skip-intro:checked) .tile-note,     .no-intro .tile-note     { animation-delay: .14s; }
+body:has(#skip-intro:checked) .tile-vital,    .no-intro .tile-vital    { animation-delay: .18s; }
+body:has(#skip-intro:checked) .tile-timeline, .no-intro .tile-timeline { animation-delay: .22s; }
+body:has(#skip-intro:checked) .tile-vital.v3, .no-intro .tile-vital.v3 { animation-delay: .26s; }
+body:has(#skip-intro:checked) .tile-summary,  .no-intro .tile-summary  { animation-delay: .30s; }
+body:has(#skip-intro:checked) footer,         .no-intro footer         { animation-delay: .34s; }
+
+/* ---- intro splash (root page only -- hy/en/de/ru have no splash at all,
+   see .no-intro above) ----
+   In normal document flow (not a fixed overlay) so a real scroll gesture
+   genuinely reveals the main content underneath -- no CSS trick needed for
+   that part, it's just how scrolling works. Clicking it skips it instantly
+   via the :has(#skip-intro:checked) selector below -- still zero JS. */
+.skip-intro-input {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.intro-section {
+  display: flex; align-items: center; justify-content: center;
+  flex: none; align-self: stretch;
+  width: 100%; height: 100vh; overflow: hidden;
+  cursor: pointer;
   background: var(--bg);
   background-image:
     radial-gradient(ellipse 900px 600px at 8% -8%, var(--glow-1), transparent 60%),
     radial-gradient(ellipse 800px 700px at 100% 30%, var(--glow-2), transparent 60%);
-  display: flex; align-items: center; justify-content: center;
-  clip-path: circle(150% at 50% 50%);
-  animation: iris-close .8s cubic-bezier(.6,0,.3,1) 3s forwards;
+  animation: intro-collapse 3.8s ease forwards;
 }
-@keyframes iris-close { to { clip-path: circle(0% at 50% 50%); } }
+@keyframes intro-collapse {
+  0%, 92%  { height: 100vh; opacity: 1; }
+  100%     { height: 0; opacity: 0; }
+}
+body:has(#skip-intro:checked) .intro-section {
+  animation: none;
+  height: 0; opacity: 0;
+  transition: height .4s ease, opacity .3s ease;
+}
 .intro-content { display: flex; flex-direction: column; align-items: center; gap: .7rem; text-align: center; padding: 0 1.5rem; }
 .intro-eyebrow {
   display: flex; align-items: center; gap: .5rem;
@@ -418,8 +450,12 @@ footer         { animation: fadeUp    .8s ease-out 4.18s both; }
   font-family: var(--font-mono); font-size: .85rem; color: var(--muted);
   opacity: 0; animation: fadeUp .5s ease .35s both;
 }
+.intro-hint {
+  font-family: var(--font-mono); font-size: .68rem; color: var(--muted); opacity: 0;
+  animation: fadeUp .5s ease .5s both;
+}
 @media (prefers-reduced-motion: reduce) {
-  .intro-overlay { display: none; }
+  .intro-section { display: none; }
 }
 
 @media (max-width: 680px) {
