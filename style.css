@@ -366,43 +366,35 @@ footer {
   main { padding-bottom: 5.5rem; }
 }
 
-/* ---- entrance (scattered, not sequential, slow enough to actually see) ---- */
+/* ---- entrance (scattered, not sequential) ----
+   Always fast/ready-quickly, on every page, root included: the splash on
+   root sits in normal flow ABOVE main and fills the whole viewport, so the
+   tiles being "ready" underneath while it's still showing is invisible --
+   you only ever see them once you've scrolled past it or it has collapsed.
+   That means entrance timing never has to race the splash timer, so a fast
+   scroll (or a slow one, or none at all) always finds the tiles already
+   there instead of catching them mid-wait. */
 @keyframes fadeUp    { from { opacity: 0; transform: translateY(26px); }  to { opacity: 1; transform: none; } }
 @keyframes fadeLeft  { from { opacity: 0; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
 @keyframes fadeRight { from { opacity: 0; transform: translateX(34px); } to { opacity: 1; transform: none; } }
 @keyframes popIn     { from { opacity: 0; transform: scale(.78); }        to { opacity: 1; transform: none; } }
 
 .bento .tile, footer { opacity: 0; }
-.tile-hero     { animation: popIn    .85s cubic-bezier(.22,1.4,.36,1) 3.50s both; }
-.tile-contact  { animation: fadeLeft  .8s ease-out 3.55s both; }
-.tile-cta      { animation: popIn    .85s cubic-bezier(.22,1.4,.36,1) 3.68s both; }
-.tile-vital.v2 { animation: fadeLeft  .8s ease-out 3.62s both; }
-.tile-note     { animation: fadeRight .8s ease-out 3.75s both; }
-.tile-vital    { animation: fadeUp    .8s ease-out 3.85s both; }
-.tile-timeline { animation: fadeUp    .8s ease-out 3.92s both; }
-.tile-vital.v3 { animation: fadeRight .8s ease-out 4.00s both; }
-.tile-summary  { animation: fadeUp    .8s ease-out 4.08s both; }
-footer         { animation: fadeUp    .8s ease-out 4.18s both; }
+.tile-hero     { animation: popIn    .5s cubic-bezier(.22,1.4,.36,1) .02s both; }
+.tile-contact  { animation: fadeLeft  .5s ease-out .06s both; }
+.tile-cta      { animation: popIn    .5s cubic-bezier(.22,1.4,.36,1) .10s both; }
+.tile-vital.v2 { animation: fadeLeft  .5s ease-out .08s both; }
+.tile-note     { animation: fadeRight .5s ease-out .14s both; }
+.tile-vital    { animation: fadeUp    .5s ease-out .18s both; }
+.tile-timeline { animation: fadeUp    .5s ease-out .22s both; }
+.tile-vital.v3 { animation: fadeRight .5s ease-out .26s both; }
+.tile-summary  { animation: fadeUp    .5s ease-out .30s both; }
+footer         { animation: fadeUp    .5s ease-out .34s both; }
 @media (prefers-reduced-motion: reduce) {
   .bento .tile, footer { animation: none; opacity: 1; }
 }
 
-/* skip the wait -- clicking the intro fast-forwards the tile entrance too.
-   Pages that never had a splash to begin with (.no-intro) use these same
-   fast delays as their normal, default timing. */
-body:has(#skip-intro:checked) .tile-hero,     .no-intro .tile-hero     { animation-delay: .02s; }
-body:has(#skip-intro:checked) .tile-contact,  .no-intro .tile-contact  { animation-delay: .06s; }
-body:has(#skip-intro:checked) .tile-cta,      .no-intro .tile-cta      { animation-delay: .10s; }
-body:has(#skip-intro:checked) .tile-vital.v2, .no-intro .tile-vital.v2 { animation-delay: .08s; }
-body:has(#skip-intro:checked) .tile-note,     .no-intro .tile-note     { animation-delay: .14s; }
-body:has(#skip-intro:checked) .tile-vital,    .no-intro .tile-vital    { animation-delay: .18s; }
-body:has(#skip-intro:checked) .tile-timeline, .no-intro .tile-timeline { animation-delay: .22s; }
-body:has(#skip-intro:checked) .tile-vital.v3, .no-intro .tile-vital.v3 { animation-delay: .26s; }
-body:has(#skip-intro:checked) .tile-summary,  .no-intro .tile-summary  { animation-delay: .30s; }
-body:has(#skip-intro:checked) footer,         .no-intro footer         { animation-delay: .34s; }
-
-/* ---- intro splash (root page only -- hy/en/de/ru have no splash at all,
-   see .no-intro above) ----
+/* ---- intro splash (root page only -- hy/en/de/ru have no splash at all) ----
    In normal document flow (not a fixed overlay) so a real scroll gesture
    genuinely reveals the main content underneath -- no CSS trick needed for
    that part, it's just how scrolling works. Clicking it skips it instantly
