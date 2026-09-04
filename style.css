@@ -134,9 +134,11 @@ main { width: 100%; max-width: 760px; padding: 2.2rem 1.5rem 3rem; display: flex
 .langbar .current, .variantbar .current { color: var(--ink); font-weight: 600; }
 
 /* language switcher reachable straight from the splash, without dismissing
-   it first -- fixed like the theme switch, opposite corner */
+   it first -- positioned within the splash itself (not viewport-fixed), so
+   it scrolls away together with it instead of lingering as a duplicate
+   once the card's own langbar is in view */
 .intro-langbar {
-  position: fixed; top: 1rem; left: 1rem; z-index: 1000;
+  position: absolute; top: 1rem; left: 1rem; z-index: 2;
   display: flex; gap: .7rem;
   font-family: var(--font-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
 }
@@ -406,21 +408,38 @@ footer         { animation: fadeUp    .5s ease-out .34s both; }
 }
 
 /* ---- intro splash (every language page has its own) ----
-   In normal document flow (not a fixed overlay) so a real scroll gesture
-   genuinely reveals the main content underneath -- no CSS trick needed,
-   it's just how scrolling works. It's a plain <a href="#card"> wrapping
-   the whole thing: a click jumps straight to the card via native anchor
-   navigation -- no layout collapse, so nothing stops you from scrolling
-   back up to see it again afterwards, same as if you'd just scrolled past
-   it yourself. (An earlier version collapsed the element's height on a
-   timer; if that collapse fires while a scroll gesture is mid-flight, the
-   browser clamps the stale scroll position to the new, shorter document,
-   which can jump straight to the page bottom. Not animating height at all
-   sidesteps that class of bug entirely.) */
+   .intro-wrap is the in-flow, full-viewport block; .intro-langbar and
+   .intro-section both live inside it (absolutely / normally positioned
+   relative to it) so they scroll away together -- no separate viewport-
+   fixed piece left behind as a stray duplicate once you're past it.
+
+   Scrolling past it works natively, no CSS trick needed. Clicking the
+   card jumps there instantly via a plain <a href="#card"> (native anchor
+   navigation, no layout collapse -- so on its own, nothing stops you
+   scrolling back up to see it again, same as if you'd just scrolled past
+   it). A tiny same-origin script (intro.js, see CSP) marks it dismissed
+   for good on the first scroll or click and hides it via the
+   .intro-dismissed rule below -- true one-way dismissal genuinely can't
+   be done in CSS alone: every CSS state (:checked, :target, scroll-driven
+   timelines) is a function of the *current* condition, none of them can
+   remember that a past scroll happened once that condition changes again.
+   Without JS this still degrades gracefully to "reversible, revisit by
+   scrolling back up." (An earlier version collapsed the element's own
+   height on a timer instead; if that collapse fired while a scroll
+   gesture was mid-flight, the browser would clamp the stale scroll
+   position to the new, shorter document -- which could jump straight to
+   the page bottom. Collapsing a full page section outside of a discrete,
+   one-off event like a click or a script's explicit decision is what
+   caused that -- so it happens here as a single JS-driven state flip, not
+   as an animation racing an in-progress scroll.) */
+.intro-wrap {
+  position: relative; flex: none; align-self: stretch;
+  width: 100%; height: 100vh; overflow: hidden;
+}
+.intro-dismissed .intro-wrap { display: none !important; }
 .intro-section {
   display: flex; align-items: center; justify-content: center;
-  flex: none; align-self: stretch;
-  width: 100%; height: 100vh; overflow: hidden;
+  width: 100%; height: 100%;
   cursor: pointer; text-decoration: none; color: inherit;
   background: var(--bg);
   background-image:
@@ -451,7 +470,7 @@ footer         { animation: fadeUp    .5s ease-out .34s both; }
   animation: fadeUp .5s ease .5s both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .intro-section { display: none; }
+  .intro-wrap { display: none; }
 }
 
 @media (max-width: 680px) {
@@ -483,7 +502,7 @@ footer         { animation: fadeUp    .5s ease-out .34s both; }
 
 /* ---- print ---- */
 @media print {
-  .langbar, .variantbar, .intro-overlay, .theme-switch, .mobile-cta, .mini-ecg, .lang-detail { display: none !important; }
+  .langbar, .variantbar, .intro-wrap, .theme-switch, .mobile-cta, .mini-ecg, .lang-detail { display: none !important; }
   html, body { background: #fff !important; }
   body::before { display: none !important; }
   body { background-image: none !important; }

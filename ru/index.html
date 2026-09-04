@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; base-uri 'none'; form-action 'none';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
@@ -23,20 +23,22 @@
   <input type="checkbox" id="theme-switch">
   <span class="theme-switch-track"><span class="theme-switch-thumb"></span></span>
 </label>
-<nav class="intro-langbar" aria-label="Language">
-  <a href="../en/">EN</a>
-  <a href="../">HY</a>
-  <a href="../de/">DE</a>
-  <span class="current">RU</span>
-</nav>
-<a href="#card" class="intro-section">
-  <div class="intro-content">
-    <div class="intro-eyebrow"><span class="live-dot"></span>Цифровая визитка</div>
-    <div class="intro-name">Мгер Мкртчян</div>
-    <div class="intro-sub">Врач-хирург общей практики · Ереван, Армения</div>
-    <div class="intro-hint">нажмите или прокрутите ↓</div>
-  </div>
-</a>
+<div class="intro-wrap">
+  <nav class="intro-langbar" aria-label="Language">
+    <a href="../en/">EN</a>
+    <a href="../">HY</a>
+    <a href="../de/">DE</a>
+    <span class="current">RU</span>
+  </nav>
+  <a href="#card" class="intro-section">
+    <div class="intro-content">
+      <div class="intro-eyebrow"><span class="live-dot"></span>Цифровая визитка</div>
+      <div class="intro-name">Мгер Мкртчян</div>
+      <div class="intro-sub">Врач-хирург общей практики · Ереван, Армения</div>
+      <div class="intro-hint">нажмите или прокрутите ↓</div>
+    </div>
+  </a>
+</div>
 <main id="card">
   <nav class="langbar" aria-label="Language">
     <a href="../en/">EN</a>
@@ -136,5 +138,6 @@
   <span>Скачать резюме</span>
   <span class="mobile-cta-arrow">↓</span>
 </a>
+<script src="../intro.js" defer></script>
 </body>
 </html>
